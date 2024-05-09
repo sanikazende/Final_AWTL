@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real-Time Search Engine</title>
+<style>
+#search-results {
+    margin-top: 10px;
+}
+.search-result {
+    margin-bottom: 5px;
+}
+</style>
+</head>
+<body>
+<h1>Real-Time Search Engine</h1>
+<input type="text" id="search-input" placeholder="Search...">
+<div id="search-results"></div>
+
+<script>
+const apiUrl = 'http://localhost:3000/search';; // Replace with your backend API endpoint URL
+const searchInput = document.getElementById('search-input');
+const searchResultsContainer = document.getElementById('search-results');
+
+async function fetchSearchResults(query) {
+    try {
+        const response = await fetch(`${apiUrl}?q=${query}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch search results');
+        }
+        const data = await response.json();
+        displaySearchResults(data);
+    } catch (error) {
+        console.error('Error fetching search results:', error);
+        // You can add error handling here, such as displaying a message to the user
+    }
+}
+
+function displaySearchResults(results) {
+    searchResultsContainer.innerHTML = '';
+    if (results.length === 0) {
+        const noResultsElement = document.createElement('div');
+        noResultsElement.textContent = 'No results found';
+        searchResultsContainer.appendChild(noResultsElement);
+    } else {
+        results.forEach(result => {
+            const resultElement = document.createElement('div');
+            resultElement.classList.add('search-result');
+            resultElement.textContent = result.title; // Adjust based on your data structure
+            searchResultsContainer.appendChild(resultElement);
+        });
+    }
+}
+
+function handleInputChange(event) {
+    const query = event.target.value.trim();
+    if (query) {
+        fetchSearchResults(query);
+    } else {
+        searchResultsContainer.innerHTML = '';
+    }
+}
+
+searchInput.addEventListener('input', handleInputChange);
+</script>
+</body>
+</html>

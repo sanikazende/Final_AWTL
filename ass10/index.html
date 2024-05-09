@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaint System</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h2>Complaint Form</h2>
+<form id="complaintForm">
+    <label for="complaint">Enter your complaint:</label><br>
+    <textarea id="complaint" name="complaint" rows="4" cols="50"></textarea><br><br>
+    <input type="submit" value="Submit Complaint">
+</form>
+
+<script>
+$(document).ready(function(){
+    $('#complaintForm').submit(function(e){ 
+        e.preventDefault();
+
+        var complaint = $('#complaint').val();
+
+        $.ajax({
+            type: 'POST',
+            url: 'submit_complaint.php', 
+            data: {complaint: complaint}, 
+            success: function(response){
+                alert('Complaint submitted successfully!');
+                $('#complaint').val('');
+            },
+            error: function(xhr, status, error){ 
+                alert('Error: ' + error);
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
